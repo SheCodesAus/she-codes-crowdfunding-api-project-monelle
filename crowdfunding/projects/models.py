@@ -1,3 +1,4 @@
+from re import T
 from tkinter import CASCADE
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -16,6 +17,12 @@ class Project(models.Model):
         on_delete=models.CASCADE,
         related_name='owner_projects'
     )
+    category = models.ForeignKey(
+        'Category',
+        on_delete=models.SET_NULL,
+            null = True,
+            blank = True,
+    )
 
 class Pledge(models.Model):
     amount = models.IntegerField()
@@ -27,3 +34,8 @@ class Pledge(models.Model):
         related_name='pledges'
     )
     supporter = models.CharField(max_length=200)
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=200)
+    slug = models.SlugField()
