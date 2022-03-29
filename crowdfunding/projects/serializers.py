@@ -1,8 +1,9 @@
 from pickletools import read_long1
 from unittest.util import _MAX_LENGTH
+from urllib.parse import MAX_CACHE_SIZE
 from xmlrpc.client import ServerProxy
 from rest_framework import serializers
-from .models import Project, Pledge
+from .models import Project, Pledge, Category
 
 
 class PledgeSerializer(serializers.Serializer):
@@ -26,6 +27,10 @@ class ProjectSerializer(serializers.Serializer):
     is_open = serializers.BooleanField()
     date_created = serializers.DateTimeField()
     owner = serializers.ReadOnlyField(source='owner.id')
+    category = serializers.SlugRelatedField(
+        slug_field='slug',
+        queryset=Category.objects.all()
+    )
     # owner = serializers.CharField(max_length=200)
     # pledges = PledgeSerializer(many=True, read_only=True)
 
@@ -43,5 +48,11 @@ class ProjectDetailSerializer(ProjectSerializer):
         instance.is_open = validated_data.get('is_open', instance.is_open)
         instance.date_created = validated_data.get('date_created', instance.date_created)
         instance.owner = validated_data.get('owner', instance.owner)
+        instance.category = validated_data.get('category', instance.category)
         instance.save()
         return instance
+
+class CategorySerializer(serializers.Serializer):
+    id = serializers.ReadOnlyField()
+    name = serializers.CharField(max_length=200)
+    slug = serializers.SlugField()

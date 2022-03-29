@@ -1,0 +1,34 @@
+[
+    {
+        "model": "projects.category",
+        "pk": 1,
+        "fields": {
+            "name": "Painting",
+            "slug": "painting"
+        }
+    },
+    {
+        "model": "projects.category",
+        "pk": 2,
+        "fields": {
+            "name": "Design",
+            "slug": "design"
+        }
+    },
+    {
+        "model": "projects.category",
+        "pk": 3,
+        "fields": {
+            "name": "Photography",
+            "slug": "photography"
+        }
+    },
+    {
+        "model": "projects.category",
+        "pk": 4,
+        "fields": {
+            "name": "Posters",
+            "slug": "posters"
+        }
+    }
+]
