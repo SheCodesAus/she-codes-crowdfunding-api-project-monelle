@@ -1,5 +1,5 @@
-from ast import Is
-from msilib.schema import ServiceInstall
+# from ast import Is
+# from msilib.schema import ServiceInstall
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Project, Pledge, Category
