@@ -1,5 +1,5 @@
 from re import T
-from tkinter import CASCADE
+# from tkinter import CASCADE
 from django.contrib.auth import get_user_model
 from django.db import models
 
