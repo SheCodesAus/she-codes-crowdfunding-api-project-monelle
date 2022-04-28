@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from .models import Project, Pledge, Category
 from .serializers import CategorySerializer, ProjectSerializer, PledgeSerializer, ProjectDetailSerializer
 from django.http import Http404
-from rest_framework import status, permissions
+from rest_framework import status, permissions, generics
 from .permissions import IsOwnerOrReadOnly
 # from crowdfunding.projects import serializers
 
@@ -36,6 +36,15 @@ class ProjectList(APIView):
 
     def get(self, request):
         projects = Project.objects.all()
+
+        is_open = request.query_params.get('is_open', None)
+        if is_open:
+            projects = projects.filter(is_open=is_open)
+
+        order_by = request.query_params.get('order_by', None)
+        if order_by:
+            projects = projects.order_by(order_by)
+
         serializer = ProjectSerializer(projects, many=True)
         return Response(serializer.data)
 
@@ -82,9 +91,19 @@ class ProjectDetail(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class CategoryList(APIView):
+    def delete(self, request, pk):
+        project = self.get_object(pk)
+        project.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def get(self, request):
-        categories = Category.objects.all()
-        serializer = CategorySerializer(categories, many=True)
-        return Response(serializer.data)
+# My original Category views
+# class CategoryList(APIView):
+
+#     def get(self, request):
+#         categories = Category.objects.all()
+#         serializer = CategorySerializer(categories, many=True)
+#         return Response(serializer.data)
+
+class CategoryList(generics.ListCreateAPIView):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
