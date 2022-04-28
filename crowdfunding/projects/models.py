@@ -20,6 +20,7 @@ class Project(models.Model):
     category = models.ForeignKey(
         'Category',
         on_delete=models.SET_NULL,
+        related_name='project_id',
             null = True,
             blank = True,
     )
