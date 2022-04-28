@@ -21,18 +21,17 @@ class PledgeSerializer(serializers.Serializer):
 class ProjectSerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()
     title = serializers.CharField(max_length=200)
-    description = serializers.CharField(max_length=200)
+    description = serializers.CharField(max_length=600)
     goal = serializers.IntegerField()
     image = serializers.URLField()
     is_open = serializers.BooleanField()
     date_created = serializers.DateTimeField()
     owner = serializers.ReadOnlyField(source='owner.id')
+    pledges = PledgeSerializer(many=True, read_only=True)
     category = serializers.SlugRelatedField(
         slug_field='slug',
         queryset=Category.objects.all()
     )
-    # owner = serializers.CharField(max_length=200)
-    # pledges = PledgeSerializer(many=True, read_only=True)
 
     def create(self, validated_data):
         return Project.objects.create(**validated_data)
@@ -48,6 +47,7 @@ class ProjectDetailSerializer(ProjectSerializer):
         instance.is_open = validated_data.get('is_open', instance.is_open)
         instance.date_created = validated_data.get('date_created', instance.date_created)
         instance.owner = validated_data.get('owner', instance.owner)
+        instance.pledges = validated_data.get('owner', instance.pledges)
         instance.category = validated_data.get('category', instance.category)
         instance.save()
         return instance
@@ -56,3 +56,6 @@ class CategorySerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()
     name = serializers.CharField(max_length=200)
     slug = serializers.SlugField()
+
+    def create(sel, validated_data):
+        return Category.objects.create(**validated_data)
